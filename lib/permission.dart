@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 class Permission {
   static const MethodChannel channel = const MethodChannel('plugins.ly.com/permission');
@@ -12,8 +13,8 @@ class Permission {
     });
     List<Permissions> permissionStatusList = [];
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      for (int i = 0; i < list.length; i++) {
-        PermissionStatus status = await getSinglePermissionStatus(list[i]);
+      for (int i = 0; i < permissionNameList.length; i++) {
+        PermissionStatus status = await getSinglePermissionStatus(permissionNameList[i]);
         permissionStatusList.add(
             Permissions(permissionNameList[i], status));
       }
