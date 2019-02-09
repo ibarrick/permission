@@ -86,29 +86,31 @@ class Permission {
         PermissionStatus status = await requestSinglePermission(permissionNameList[i]);
         permissionStatusList.add(Permissions(permissionNameList[i], status));
       }
-    }
-    var status = await channel.invokeMethod("requestPermissions", {"permissions": list});
+    } else {
+      var status = await channel.invokeMethod("requestPermissions", {"permissions": list});
 
-    for (int i = 0; i < status.length; i++) {
-      PermissionStatus permissionStatus;
-      switch (status[i]) {
-        case 0:
-          permissionStatus = PermissionStatus.allow;
-          break;
-        case 1:
-          permissionStatus = PermissionStatus.deny;
-          break;
-        case 2:
-          permissionStatus = PermissionStatus.notDecided;
-          break;
-        case 3:
-          permissionStatus = PermissionStatus.notAgain;
-          break;
-        default:
-          permissionStatus = PermissionStatus.notDecided;
-          break;
+      for (int i = 0; i < status.length; i++) {
+        PermissionStatus permissionStatus;
+        switch (status[i]) {
+          case 0:
+            permissionStatus = PermissionStatus.allow;
+            break;
+          case 1:
+            permissionStatus = PermissionStatus.deny;
+            break;
+          case 2:
+            permissionStatus = PermissionStatus.notDecided;
+            break;
+          case 3:
+            permissionStatus = PermissionStatus.notAgain;
+            break;
+          default:
+            permissionStatus = PermissionStatus.notDecided;
+            break;
+        }
+        permissionStatusList.add(
+            Permissions(permissionNameList[i], permissionStatus));
       }
-      permissionStatusList.add(Permissions(permissionNameList[i], permissionStatus));
     }
     return permissionStatusList;
   }
