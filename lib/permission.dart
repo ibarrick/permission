@@ -10,28 +10,39 @@ class Permission {
     permissionNameList.forEach((p) {
       list.add(getPermissionString(p));
     });
-    var status = await channel.invokeMethod("getPermissionsStatus", {"permissions": list});
     List<Permissions> permissionStatusList = [];
-    for (int i = 0; i < status.length; i++) {
-      PermissionStatus permissionStatus;
-      switch (status[i]) {
-        case 0:
-          permissionStatus = PermissionStatus.allow;
-          break;
-        case 1:
-          permissionStatus = PermissionStatus.deny;
-          break;
-        case 2:
-          permissionStatus = PermissionStatus.notDecided;
-          break;
-        case 3:
-          permissionStatus = PermissionStatus.notAgain;
-          break;
-        default:
-          permissionStatus = PermissionStatus.notDecided;
-          break;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      for (int i = 0; i < list.length; i++) {
+        PermissionStatus status = await getSinglePermissionStatus(list[i]);
+        permissionStatusList.add(
+            Permissions(permissionNameList[i], status));
       }
-      permissionStatusList.add(Permissions(permissionNameList[i], permissionStatus));
+    } else {
+      var status = await channel.invokeMethod(
+          "getPermissionsStatus", {"permissions": list});
+
+      for (int i = 0; i < status.length; i++) {
+        PermissionStatus permissionStatus;
+        switch (status[i]) {
+          case 0:
+            permissionStatus = PermissionStatus.allow;
+            break;
+          case 1:
+            permissionStatus = PermissionStatus.deny;
+            break;
+          case 2:
+            permissionStatus = PermissionStatus.notDecided;
+            break;
+          case 3:
+            permissionStatus = PermissionStatus.notAgain;
+            break;
+          default:
+            permissionStatus = PermissionStatus.notDecided;
+            break;
+        }
+        permissionStatusList.add(
+            Permissions(permissionNameList[i], permissionStatus));
+      }
     }
     return permissionStatusList;
   }
