@@ -80,8 +80,15 @@ class Permission {
     permissionNameList.forEach((p) {
       list.add(getPermissionString(p));
     });
-    var status = await channel.invokeMethod("requestPermissions", {"permissions": list});
     List<Permissions> permissionStatusList = [];
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      for (int i = 0; i < permissionNameList.length; i++) {
+        PermissionStatus status = await requestSinglePermission(permissionNameList[i]);
+        permissionStatusList.add(Permissions(permissionNameList[i], status));
+      }
+    }
+    var status = await channel.invokeMethod("requestPermissions", {"permissions": list});
+
     for (int i = 0; i < status.length; i++) {
       PermissionStatus permissionStatus;
       switch (status[i]) {
