@@ -231,6 +231,12 @@ CLLocationManager *locationManager;
         } else if ([@"Location" isEqualToString:permissionName]){
             locationManager = [[CLLocationManager alloc] init];
             [locationManager requestAlwaysAuthorization];
+            [NSThread sleepForTimeInterval:10.0f];
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+                result(@0);
+            } else {
+                result(@1);
+            }
         }
     } else if ([@"openSettings" isEqualToString:call.method]) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
