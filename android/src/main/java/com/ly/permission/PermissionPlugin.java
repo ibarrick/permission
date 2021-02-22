@@ -76,9 +76,9 @@ public class PermissionPlugin implements FlutterPlugin, ActivityAware, MethodCal
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
-        List<String> permissions;
+        List<String> permissions = new ArrayList<>();
         switch (call.method) {
-            case "getPermissionStatus":
+            case "getPermissionsStatus":
                 permissions = call.argument("permissions");
                 result.success(get(permissions));
                 break;
@@ -104,12 +104,12 @@ public class PermissionPlugin implements FlutterPlugin, ActivityAware, MethodCal
             permission = getManifestPermission(permission);
             if (ContextCompat.checkSelfPermission(registrar == null ? binding.getActivity() : registrar.activity(), permission) == PackageManager.PERMISSION_DENIED) {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                    intList.add(-1);
+                    intList.add(3);
                 } else {
-                    intList.add(0);
+                    intList.add(1);
                 }
             } else {
-                intList.add(1);
+                intList.add(0);
             }
         }
         return intList;
@@ -176,12 +176,12 @@ public class PermissionPlugin implements FlutterPlugin, ActivityAware, MethodCal
             for (int i = 0; i < ints.length; i++) {
                 if (ints[i] == PackageManager.PERMISSION_DENIED) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(registrar == null ? binding.getActivity() : registrar.activity(), strings[i])) {
-                        intList.add(-1);
+                        intList.add(3);
                     } else {
-                        intList.add(0);
+                        intList.add(1);
                     }
                 } else {
-                    intList.add(1);
+                    intList.add(0);
                 }
             }
             result.success(intList);
