@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class Permission {
   static const MethodChannel channel = const MethodChannel('plugins.ly.com/permission');
 
-  static Future<List<Permissions>> getPermissionsStatus(List<PermissionName> permissionNameList) async {
+  static Future<List<Permissions>> getPermissionStatus(List<PermissionName> permissionNameList) async {
     List<String> list = [];
     permissionNameList.forEach((p) {
       list.add(getPermissionString(p));
